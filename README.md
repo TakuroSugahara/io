@@ -1,6 +1,10 @@
 
 Use io in golang to know file descriptor.
 
+# file descriptorについて
+
+### os.Fileの型と、fdとは何か
+
 ```go
 // goのos.Fileの構造体
 type file struct {
@@ -16,8 +20,10 @@ type file struct {
 
 poll.FDはfile descriptorを表している
 
-Linuxカーネルプロセル内部ではopen舌ファイルに識別子をつけている。（非負整数）
+Linuxカーネルプロセル内部ではopenファイルに識別子をつけている。（非負整数）
 これをfile descriptorと呼び、goではpoll.FD型がこれを表している
+
+### FDの型とinode番号
 
 ```go
 // poll.FDの型
@@ -60,3 +66,7 @@ Sysfdがまさにfile descriptorの識別子を表している。
 ちなみにOpenしてないものにも一応識別子は存在しており、それはinode番号と呼ばれている
 fdとはその番号とは関係ないので、同じファイルだろうがOpenした時々で異なる番号がつけられる可能性がある
 
+### os.Openの処理とfdの取得方法
+
+`os.Open` の内部では `syscall.Open` を呼び出している。
+つまり、`syscall.Open` を使うことで、fdを取得している。
