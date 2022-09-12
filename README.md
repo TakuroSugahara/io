@@ -70,3 +70,16 @@ fdとはその番号とは関係ないので、同じファイルだろうがOpe
 
 `os.Open` の内部では `syscall.Open` を呼び出している。
 つまり、`syscall.Open` を使うことで、fdを取得している。
+
+### file.Readと低レイヤーの繋がり
+
+`file.Read` では いくつかの非公開関数を呼び出しながら最終的に `syscall.Read` をfdを渡して呼び出している
+処理の順番は以下
+
+1. os.File型のReadメソッド
+1. os.Fileのreadメソッド
+1. poll.FD型のReadメソッド
+1. syscall.Readメソッド
+1. osカーネルのシステムコールの読み込み処理
+
+Wirteも大体同様の処理になっている
